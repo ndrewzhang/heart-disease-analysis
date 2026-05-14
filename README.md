@@ -1,2 +1,2 @@
 ﻿# heart-disease-analysis
-Analysis on CDC's 2019-2021 Heart Disease Mortality Rates on Individuals Over the Age of 35.
+ This is a poject for our INST447 Class created by both Keshav Ganapathy Raman and Andrew Zhang at the University of Maryland. THe project entails Analysis on CDC's 2019-2021 Heart Disease Mortality Rates on Individuals Over the Age of 35. Please refer to the Notebook Template to see our results and conclusions along with the code for our project. IWthin this package there should be Notebook templatein the form of a QMD file, and 2 CSV's one that is cleaned and our original data set.

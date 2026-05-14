@@ -2,7 +2,7 @@
 title: "Heart Disease Mortality Analysis Across U.S. Counties and States"
 author: "Andrew Zhang, Keshav Ganapathy Raman"
 subtitle: "Final project for INST447, Spring 2026"
-format: qmd
+format: html
 ---
 
 # Executive Summary
@@ -49,11 +49,11 @@ Keshav is responsible for:
 
 ## Extra Mile Plan
 
-Our extra mile has two parts. First, we created a cleaned final CSV that is easier for public health officials to use than the original file. The cleaned file uses simpler column names, keeps the columns most useful for planning, and includes a `high_risk_flag` for county rows above the 75th percentile of county mortality rates.
+Our extra mile has two parts. First, Andrew created a cleaned final CSV that is easier for public health officials to use than the original file. The cleaned file uses simpler column names, keeps the columns most useful for planning, and includes a `high_risk_flag` for county rows above the 75th percentile of county mortality rates. This makes it so we can easier flag at risk counties and use the data more effectively for conclusions later on.
 
-Second, we spent extra time looking at bias and limitations. We examined missing values, suppressed values, small county issues, race/ethnicity groups, sex groups, and possible problems connected to death certificate reporting. This matters because public health data can look very exact, but the numbers still depend on how deaths were grouped and recorded.
+After this Keshav spent extra time looking at bias and limitations. We examined missing values, suppressed values, small county issues, race/ethnicity groups, sex groups, and possible problems connected to death certificate reporting. This matters because public health data can look very exact, but the numbers still depend on how deaths were grouped and recorded.
 
-## Source and Extraction
+## Source(s) & Extraction
 
 The dataset was located as a public CSV file from data.gov. It is titled "Heart Disease Mortality Data Among US Adults (35+) by State/Territory and County, 2019-2021." The data is connected to CDC mortality records and the National Vital Statistics System. The original information comes from death certificates, where cause of death is recorded and coded using standardized medical coding.
 
@@ -202,7 +202,7 @@ state_df = clean_df[clean_df["geographic_level"].str.lower() == "state"].copy()
 clean_df.head()
 ```
 
-Copies raw dataframe, normalizes all column names to lowercase with underscores, converts the mortality rate and coordinate fields to numeric (setting non-numeric values to NaN), filters to heart disease mortality rows only, renames the most useful columns, removes extra whitespace from categorical fields, splits the data into county and state, computes the 75th percentile of county mortality rates, and then adds a `high_risk_flag` column marking county rows above that threshold.
+ This code copies the raw dataframe, normalizes all column names to lowercase with underscores, converts the mortality rate and coordinate fields to numeric (setting non-numeric values to NaN), filters to heart disease mortality rows only, renames the most useful columns, removes extra whitespace from categorical fields, splits the data into county and state, computes the 75th percentile of county mortality rates, and then adds a `high_risk_flag` column marking county rows above that threshold.
 
 ```{python}
 clean_df.shape
@@ -507,7 +507,7 @@ Bar chart visualizing the missing rate counts per sex group.
 
 The missing value checks show where the dataset has weaker coverage. If a race/ethnicity group or sex group has many missing rates, it can be harder to compare that group fairly.
 
-Small counties are another concern. A small number of deaths can create a high rate when the population is small, so county levl rates may be less stable than state level rates.
+Small counties are another concern. A small number of deaths can create a high rate when the population is small, so county level rates may be less stable than state level rates.
 
 Finally, because this dataset includes 2019 to 2021, the context of COVID matters. People may have delayed care and mortality patterns changed heavily during the pandemic.
 
