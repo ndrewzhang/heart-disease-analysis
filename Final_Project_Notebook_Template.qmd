@@ -77,17 +77,25 @@ raw_df = pd.read_csv(file_path)
 raw_df.head()
 ```
 
+Imports the required libraries, applies the seaborn whitegrid theme, reads the raw CDC CSV file into a dataframe, and displays the first five rows to confirm it loaded correctly.
+
 ```{python}
 raw_df.shape
 ```
+
+Prints the total number of rows and columns in the raw dataframe to give a sense of the dataset's size before any cleaning.
 
 ```{python}
 raw_df.columns.tolist()
 ```
 
+Lists every column name in the raw file so we can see what fields are available and decide which to keep during transformation.
+
 ```{python}
 raw_df.info()
 ```
+
+Shows the data type and non-null count for each column, which helps identify columns that need type conversion or have missing values.
 
 ## Main Variables Used
 
@@ -199,17 +207,25 @@ state_df = clean_df[clean_df["geographic_level"].str.lower() == "state"].copy()
 clean_df.head()
 ```
 
+Copies the raw dataframe, normalizes all column names to lowercase with underscores, converts the mortality rate and coordinate fields to numeric (setting non-numeric values to NaN), filters to heart disease mortality rows only, keeps and renames the most useful columns, strips extra whitespace from key categorical fields, splits the data into county and state subsets, computes the 75th percentile of county mortality rates, and adds a `high_risk_flag` column marking county rows above that threshold.
+
 ```{python}
 clean_df.shape
 ```
+
+Confirms the number of rows and columns remaining in the cleaned dataframe after transformation.
 
 ```{python}
 county_df.shape, state_df.shape
 ```
 
+Shows the dimensions of the county-level and state-level subsets separately so we know how many rows each geographic level contains.
+
 ```{python}
 county_75th_percentile
 ```
+
+Displays the 75th percentile mortality rate value used as the threshold for the `high_risk_flag` column.
 
 # Analysis & Evaluation
 
@@ -222,6 +238,8 @@ numeric_summary = clean_df.select_dtypes(include="number").agg(["min", "max", "m
 numeric_summary["missing_count"] = clean_df.select_dtypes(include="number").isna().sum()
 numeric_summary
 ```
+
+Computes min, max, mean, and median for every numeric column in the cleaned dataframe, then appends a missing-value count so we can see the range of mortality rates and how many values are absent.
 
 ```{python}
 categorical_columns = [
@@ -244,6 +262,8 @@ for col in categorical_columns:
     display(clean_df[col].value_counts(dropna=False).head(15))
 ```
 
+Prints the top 15 most common values for each categorical column so we can see which states, geographic levels, sex groups, race/ethnicity groups, and other categories appear most often, including any NaN counts.
+
 ## Descriptive Visualizations
 
 ```{python}
@@ -255,6 +275,8 @@ plt.ylabel("Row count")
 plt.show()
 ```
 
+Plots a histogram with a KDE overlay showing the overall spread of mortality rates across all rows, including any skew or outliers.
+
 ```{python}
 plt.figure(figsize=(8, 5))
 clean_df["geographic_level"].value_counts().plot(kind="bar")
@@ -264,6 +286,8 @@ plt.ylabel("Row count")
 plt.xticks(rotation=30, ha="right")
 plt.show()
 ```
+
+Creates a bar chart showing how many rows fall into each geographic level (county, state, territory, national) so we can see the composition of the dataset.
 
 ```{python}
 plt.figure(figsize=(8, 5))
@@ -275,6 +299,8 @@ plt.xticks(rotation=30, ha="right")
 plt.show()
 ```
 
+Bar chart showing the number of rows for each sex category, including any NaN values, to reveal how the dataset is split across sex groups.
+
 ```{python}
 plt.figure(figsize=(10, 5))
 clean_df["race_ethnicity"].value_counts(dropna=False).plot(kind="bar")
@@ -284,6 +310,8 @@ plt.ylabel("Row count")
 plt.xticks(rotation=45, ha="right")
 plt.show()
 ```
+
+Bar chart showing the number of rows for each race/ethnicity group so we can see which groups have more or fewer records in the dataset.
 
 ```{python}
 state_county_rates = (
@@ -302,6 +330,8 @@ plt.xlabel("Average county-level mortality rate")
 plt.ylabel("State")
 plt.show()
 ```
+
+Calculates the average county-level mortality rate per state (excluding missing values), then plots a horizontal bar chart of the 10 states with the highest averages.
 
 ```{python}
 all_persons_counties = county_df[
@@ -331,6 +361,8 @@ plt.show()
 top_counties[["state_abbr", "location", "mortality_rate", "sex", "race_ethnicity"]]
 ```
 
+Filters county rows to overall/both-sex records (falling back to all rows if none match), sorts by mortality rate descending, and plots the 10 counties with the highest rates as a bar chart colored by state, with a summary table below.
+
 ```{python}
 plt.figure(figsize=(8, 5))
 sns.boxplot(data=clean_df.dropna(subset=["mortality_rate"]), x="sex", y="mortality_rate")
@@ -340,6 +372,8 @@ plt.ylabel("Mortality rate")
 plt.xticks(rotation=30, ha="right")
 plt.show()
 ```
+
+Boxplot comparing the distribution of mortality rates across sex categories, showing median, spread, and outliers for each group.
 
 ```{python}
 plt.figure(figsize=(11, 5))
@@ -354,6 +388,8 @@ plt.ylabel("Mortality rate")
 plt.xticks(rotation=45, ha="right")
 plt.show()
 ```
+
+Boxplot comparing the distribution of mortality rates across race/ethnicity groups, showing how the median and spread differ between groups.
 
 ```{python}
 map_df = clean_df.dropna(subset=["longitude", "latitude", "mortality_rate"])
@@ -373,6 +409,8 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
+
+Plots each row as a dot at its latitude/longitude coordinates, colored by mortality rate using the viridis scale, giving a rough geographic view of where higher and lower rates are concentrated across the U.S.
 
 ## EDA Narrative
 
@@ -408,6 +446,8 @@ missing_by_geo = (
 missing_by_geo
 ```
 
+Counts how many rows have a missing `mortality_rate` for each geographic level, showing which level (county, state, etc.) has the most data gaps.
+
 ```{python}
 missing_by_race = (
     clean_df
@@ -419,6 +459,8 @@ missing_by_race = (
 
 missing_by_race
 ```
+
+Counts missing `mortality_rate` values grouped by race/ethnicity to reveal which racial or ethnic groups have the most suppressed or absent data.
 
 ```{python}
 missing_by_sex = (
@@ -432,6 +474,8 @@ missing_by_sex = (
 missing_by_sex
 ```
 
+Counts missing `mortality_rate` values grouped by sex to show whether male, female, or overall rows have more data suppression.
+
 ```{python}
 race_balance = clean_df["race_ethnicity"].value_counts(dropna=False)
 sex_balance = clean_df["sex"].value_counts(dropna=False)
@@ -439,6 +483,8 @@ sex_balance = clean_df["sex"].value_counts(dropna=False)
 display(race_balance)
 display(sex_balance)
 ```
+
+Displays the total row count for each race/ethnicity group and each sex group to check whether any group is substantially over- or under-represented relative to others.
 
 ```{python}
 plt.figure(figsize=(10, 5))
@@ -450,6 +496,8 @@ plt.xticks(rotation=45, ha="right")
 plt.show()
 ```
 
+Bar chart visualizing the missing-rate counts per race/ethnicity group so it is easy to see at a glance which groups have the most suppressed or absent values.
+
 ```{python}
 plt.figure(figsize=(8, 5))
 missing_by_sex.plot(kind="bar")
@@ -459,6 +507,8 @@ plt.ylabel("Missing mortality rate count")
 plt.xticks(rotation=30, ha="right")
 plt.show()
 ```
+
+Bar chart visualizing the missing-rate counts per sex group to highlight whether one sex category has noticeably more suppressed data than the others.
 
 The missing-value checks show where the dataset has weaker coverage. If a race/ethnicity group or sex group has many missing rates, it can be harder to compare that group fairly. It also means public health officials should be careful about assuming that missing data means low risk.
 
@@ -476,6 +526,8 @@ clean_df.to_csv(output_path, index=False)
 
 output_path
 ```
+
+Writes the fully cleaned and transformed dataframe to a CSV file without the row index, then prints the output file path to confirm where the file was saved.
 
 ## User Guide
 
