@@ -52,9 +52,9 @@ Keshav is responsible for:
 
 ## Extra Mile Plan
 
-Our extra effort has two parts. First, we create a cleaned final CSV that is easier for public health officials to use than the original file. The cleaned file uses simpler column names, keeps the columns most useful for planning, and includes a `high_risk_flag` for county rows above the 75th percentile of county mortality rates.
+Our extra mile has two parts. First, we created a cleaned final CSV that is easier for public health officials to use than the original file. The cleaned file uses simpler column names, keeps the columns most useful for planning, and includes a `high_risk_flag` for county rows above the 75th percentile of county mortality rates.
 
-Second, we spend extra time looking at bias and limitations. We examine missing values, suppressed values, small county issues, race/ethnicity groups, sex groups, and possible problems connected to death certificate reporting. This matters because public health data can look very exact, but the numbers still depend on how deaths were recorded, grouped, and reported.
+Second, we spent extra time looking at bias and limitations. We examined missing values, suppressed values, small county issues, race/ethnicity groups, sex groups, and possible problems connected to death certificate reporting. This matters because public health data can look very exact, but the numbers still depend on how deaths were grouped and recorded.
 
 # Source(s) & Extraction
 
@@ -83,13 +83,13 @@ Imports the required libraries, applies the seaborn whitegrid theme, reads the r
 raw_df.shape
 ```
 
-Prints the total number of rows and columns in the raw dataframe to give a sense of the dataset's size before any cleaning.
+Prints the total number of rows and columns in the raw dataframe.
 
 ```{python}
 raw_df.columns.tolist()
 ```
 
-Lists every column name in the raw file so we can see what fields are available and decide which to keep during transformation.
+Lists every column name in the raw file so we can see what fields are available and decide which to keep.
 
 ```{python}
 raw_df.info()
@@ -99,11 +99,9 @@ Shows the data type and non-null count for each column, which helps identify col
 
 ## Main Variables Used
 
-Only variables that exist in this dataset are listed below.
-
 - `Year`: Year for the mortality data period.
 - `LocationAbbr`: State or territory abbreviation.
-- `LocationDesc`: Full location name, such as a state, territory, or county.
+- `LocationDesc`: Full location name (ex. State or County).
 - `GeographicLevel`: Whether the row is county, state, territory, or national level.
 - `DataSource`: Source system for the data, such as NVSS.
 - `Class`: Broader health category.
@@ -121,9 +119,9 @@ Only variables that exist in this dataset are listed below.
 
 # Transformation Processes
 
-The transformation process makes the dataset easier to analyze and easier for public health users to filter. We start by converting column names to lowercase and replacing spaces with underscores. Then we convert mortality rates and coordinates into numeric values. Missing or suppressed mortality values are kept as `NaN`, because replacing them with zero would be misleading.
+The transformation process made the dataset easier to analyze and easier for public health users to filter. We started by converting column names to lowercase and replacing spaces with underscores. Then, we converted mortality rates and coordinates into numeric values. Missing or suppressed mortality values are kept as `NaN` because replacing them with zero would be misleading.
 
-We also keep only the columns needed for this project, rename them into simpler names, create county-level and state-level subsets, and add a high-risk flag for county rows above the 75th percentile of county mortality rates.
+We also kept only the columns needed for this project, renamed them into simpler names, created county-level and state-level subsets, and then added a high-risk flag for county rows above the 75th percentile of county mortality rates.
 
 ```{python}
 df = raw_df.copy()
@@ -207,13 +205,13 @@ state_df = clean_df[clean_df["geographic_level"].str.lower() == "state"].copy()
 clean_df.head()
 ```
 
-Copies the raw dataframe, normalizes all column names to lowercase with underscores, converts the mortality rate and coordinate fields to numeric (setting non-numeric values to NaN), filters to heart disease mortality rows only, keeps and renames the most useful columns, strips extra whitespace from key categorical fields, splits the data into county and state subsets, computes the 75th percentile of county mortality rates, and adds a `high_risk_flag` column marking county rows above that threshold.
+Copies raw dataframe, normalizes all column names to lowercase with underscores, converts the mortality rate and coordinate fields to numeric (setting non-numeric values to NaN), filters to heart disease mortality rows only, renames the most useful columns, removes extra whitespace from categorical fields, splits the data into county and state, computes the 75th percentile of county mortality rates, and then adds a `high_risk_flag` column marking county rows above that threshold.
 
 ```{python}
 clean_df.shape
 ```
 
-Confirms the number of rows and columns remaining in the cleaned dataframe after transformation.
+Confirms the number of rows and columns remaining in the cleaned dataframe.
 
 ```{python}
 county_df.shape, state_df.shape
@@ -239,7 +237,7 @@ numeric_summary["missing_count"] = clean_df.select_dtypes(include="number").isna
 numeric_summary
 ```
 
-Computes min, max, mean, and median for every numeric column in the cleaned dataframe, then appends a missing-value count so we can see the range of mortality rates and how many values are absent.
+Computes min, max, mean, and median for every numeric column in the cleaned dataframe, then adds a missing value count so we can see the range of mortality rates and absent values.
 
 ```{python}
 categorical_columns = [
@@ -262,7 +260,7 @@ for col in categorical_columns:
     display(clean_df[col].value_counts(dropna=False).head(15))
 ```
 
-Prints the top 15 most common values for each categorical column so we can see which states, geographic levels, sex groups, race/ethnicity groups, and other categories appear most often, including any NaN counts.
+Prints the top 15 most common values for each categorical column so we can see which states and other categories appear most often.
 
 ## Descriptive Visualizations
 
@@ -275,7 +273,7 @@ plt.ylabel("Row count")
 plt.show()
 ```
 
-Plots a histogram with a KDE overlay showing the overall spread of mortality rates across all rows, including any skew or outliers.
+Plots a histogram with a KDE overlay showing the overall spread of mortality rates across all rows.
 
 ```{python}
 plt.figure(figsize=(8, 5))
@@ -287,7 +285,7 @@ plt.xticks(rotation=30, ha="right")
 plt.show()
 ```
 
-Creates a bar chart showing how many rows fall into each geographic level (county, state, territory, national) so we can see the composition of the dataset.
+Creates a bar chart showing how many rows fall into each geographic level (county, state, territory, national).
 
 ```{python}
 plt.figure(figsize=(8, 5))
@@ -299,7 +297,7 @@ plt.xticks(rotation=30, ha="right")
 plt.show()
 ```
 
-Bar chart showing the number of rows for each sex category, including any NaN values, to reveal how the dataset is split across sex groups.
+Bar chart showing the number of rows for each sex category, including any NaN values.
 
 ```{python}
 plt.figure(figsize=(10, 5))
@@ -311,7 +309,7 @@ plt.xticks(rotation=45, ha="right")
 plt.show()
 ```
 
-Bar chart showing the number of rows for each race/ethnicity group so we can see which groups have more or fewer records in the dataset.
+Bar chart showing the number of rows for each race/ethnicity group.
 
 ```{python}
 state_county_rates = (
@@ -331,7 +329,7 @@ plt.ylabel("State")
 plt.show()
 ```
 
-Calculates the average county-level mortality rate per state (excluding missing values), then plots a horizontal bar chart of the 10 states with the highest averages.
+Calculates the average county-level mortality rate per state then plots a horizontal bar chart of the 10 states with the highest averages.
 
 ```{python}
 all_persons_counties = county_df[
@@ -361,7 +359,7 @@ plt.show()
 top_counties[["state_abbr", "location", "mortality_rate", "sex", "race_ethnicity"]]
 ```
 
-Filters county rows to overall/both-sex records (falling back to all rows if none match), sorts by mortality rate descending, and plots the 10 counties with the highest rates as a bar chart colored by state, with a summary table below.
+Filters county rows to overall records, sorts by mortality rate (descending), and plots the 10 counties with the highest rates as a bar chart colored by state, with a summary table.
 
 ```{python}
 plt.figure(figsize=(8, 5))
@@ -373,7 +371,7 @@ plt.xticks(rotation=30, ha="right")
 plt.show()
 ```
 
-Boxplot comparing the distribution of mortality rates across sex categories, showing median, spread, and outliers for each group.
+Boxplot comparing the distribution of mortality rates across sex categories.
 
 ```{python}
 plt.figure(figsize=(11, 5))
@@ -389,7 +387,7 @@ plt.xticks(rotation=45, ha="right")
 plt.show()
 ```
 
-Boxplot comparing the distribution of mortality rates across race/ethnicity groups, showing how the median and spread differ between groups.
+Boxplot comparing the distribution of mortality rates across race/ethnicity groups.
 
 ```{python}
 map_df = clean_df.dropna(subset=["longitude", "latitude", "mortality_rate"])
@@ -410,29 +408,29 @@ plt.ylabel("Latitude")
 plt.show()
 ```
 
-Plots each row as a dot at its latitude/longitude coordinates, colored by mortality rate using the viridis scale, giving a rough geographic view of where higher and lower rates are concentrated across the U.S.
+Plots each row as a dot at its latitude/longitude coordinates, colored by mortality rate using the viridis scale.
 
 ## EDA Narrative
 
-The cleaned dataset gives a broad view of heart disease mortality across different geographic levels and demographic groups. The histogram shows how mortality rates are spread out, including some very high values. Those high values are important because they may point to places or groups that need more public health attention.
+The cleaned dataset gives a broad view of heart disease mortality across different geographic levels and demographic groups. The histogram shows how mortality rates are spread out, including some very high values. Those high values are important because they may point to places or groups that need more health attention.
 
-The geographic-level chart helps show how much of the dataset is county-level compared with state-level or national-level data. County rows are especially useful for local planning, but they can also have more missing or unstable values when the population is small.
+The geographic level chart helps show how much of the dataset is county level compared with state level or national level data. County rows are especially useful for local planning, but they can also have more missing values when the population is small.
 
-The sex and race/ethnicity charts show that the dataset is organized around demographic comparisons. This is useful because heart disease risk and mortality are not always evenly distributed. At the same time, comparing groups needs care because some groups may have more missing or suppressed values.
+The sex and ethnicity charts show that the dataset is organized around demographic comparisons. This is useful because heart disease risk and mortality are not always evenly distributed. At the same time, comparing groups needs care because some groups may have more missing values.
 
-The top-state and top-county charts are useful for public health planning because they make it easier to see where rates are higher. These charts should be treated as a starting point. A county with a high rate might need more prevention resources, but users should also consider population size, poverty, access to care, age patterns, and data suppression before making decisions.
+The top state and top county charts are useful for public health planning because they make it easier to see where rates are higher. A county with a high rate might need more prevention resources, but users should also consider population size, poverty, age patterns, and other things before making decisions.
 
 ## Achieved Purpose Discussion
 
-This project achieved its purpose by turning the original public dataset into a cleaner file and a set of basic findings that local health planners can use. The final dataset is easier to filter by state, county, sex, race/ethnicity, and high-risk flag. The charts also help show which places and groups may need more attention.
+This project achieved its purpose by turning the original public dataset into a cleaner file and findings that local health planners can use. The final dataset is easier to filter by state, county, sex, race/ethnicity, and high-risk flag. The charts also help show which places and groups may need more attention.
 
-The project does not explain every cause of heart disease mortality. It also does not replace local knowledge. Instead, it gives public health officials a clearer starting point for asking where prevention work, screenings, and community education may be most needed.
+The project does not explain every cause of heart disease mortality. It also does not replace local knowledge. However, it does give public health officials a clearer starting point for asking where prevention work and community education may be most needed.
 
 ## Bias and Limitations
 
-The dataset is useful, but it has limitations. Some mortality rates are missing or suppressed because there is insufficient data. This can happen more often in smaller counties or smaller demographic groups. If those rows are ignored completely, the analysis may underrepresent some places and populations.
+The dataset is useful, but it has limitations. Some mortality rates are missing or suppressed because there is insufficient data. If those rows are ignored completely, the analysis may be inconsistent.
 
-Another limitation is that the data depends on death certificate reporting. Death certificates are important public health records, but they can still have errors or differences in how causes of death are recorded. The dataset also covers 2019 to 2021, which overlaps with the COVID-19 period. COVID may have affected health care access, death patterns, and reporting during those years.
+Another limitation is that the data depends on death certificate reporting. Death certificates are important public health records, but they can still have errors or differences in how causes of death are recorded. The dataset also covers 2019 to 2021, which overlaps with the COVID-19 period. COVID may have impacted health care access and reporting during those years.
 
 ```{python}
 missing_by_geo = (
@@ -484,7 +482,7 @@ display(race_balance)
 display(sex_balance)
 ```
 
-Displays the total row count for each race/ethnicity group and each sex group to check whether any group is substantially over- or under-represented relative to others.
+Displays the total row count for each race/ethnicity group and each sex group to check whether any group is substantially over or under represented relative to others.
 
 ```{python}
 plt.figure(figsize=(10, 5))
@@ -496,7 +494,7 @@ plt.xticks(rotation=45, ha="right")
 plt.show()
 ```
 
-Bar chart visualizing the missing-rate counts per race/ethnicity group so it is easy to see at a glance which groups have the most suppressed or absent values.
+Bar chart visualizing the missing-rate counts per race/ethnicity group so it is easy to see at a glance which groups have the most absent values.
 
 ```{python}
 plt.figure(figsize=(8, 5))
@@ -508,13 +506,13 @@ plt.xticks(rotation=30, ha="right")
 plt.show()
 ```
 
-Bar chart visualizing the missing-rate counts per sex group to highlight whether one sex category has noticeably more suppressed data than the others.
+Bar chart visualizing the missing rate counts per sex group.
 
-The missing-value checks show where the dataset has weaker coverage. If a race/ethnicity group or sex group has many missing rates, it can be harder to compare that group fairly. It also means public health officials should be careful about assuming that missing data means low risk.
+The missing value checks show where the dataset has weaker coverage. If a race/ethnicity group or sex group has many missing rates, it can be harder to compare that group fairly.
 
-Small counties are another concern. A small number of deaths can create a high rate when the population is small, so county-level rates may be less stable than state-level rates. The dataset uses smoothed and age-adjusted rates, which helps, but it does not remove every problem.
+Small counties are another concern. A small number of deaths can create a high rate when the population is small, so county levl rates may be less stable than state level rates.
 
-Finally, because this dataset includes 2019 to 2021, the COVID-era context matters. People may have delayed care, hospitals were under stress, and mortality patterns changed during the pandemic. These factors could affect heart disease mortality rates even though the topic is not COVID itself.
+Finally, because this dataset includes 2019 to 2021, the context of COVID matters. People may have delayed care and mortality patterns changed heavily during the pandemic.
 
 # Data Product & Guide
 
@@ -527,38 +525,38 @@ clean_df.to_csv(output_path, index=False)
 output_path
 ```
 
-Writes the fully cleaned and transformed dataframe to a CSV file without the row index, then prints the output file path to confirm where the file was saved.
+Moves the fully cleaned and transformed dataframe to a CSV file, then prints the output file path to show where the file was saved.
 
 ## User Guide
 
-Public health officials can use the cleaned CSV to identify counties and states with higher heart disease mortality rates. For example, they can filter to one state, look only at county-level rows, compare mortality rates by sex or race/ethnicity, or use the `high_risk_flag` to quickly find counties with higher rates.
+Public health officials can use the cleaned CSV to identify counties and states with higher heart disease mortality rates. For example, they can filter to one state, then look only at county level rows, and compare mortality rates by sex or ethnicity, or use the `high_risk_flag` to find counties with higher rates.
 
 Final columns:
 
-- `year`: Year for the data period.
-- `state_abbr`: State or territory abbreviation.
+- `year`: Year.
+- `state_abbr`: State/territory abbreviation.
 - `location`: County, state, territory, or national location name.
 - `geographic_level`: Geographic level of the row.
-- `data_source`: Source system for the data.
+- `data_source`: Source for the data.
 - `class`: Broader disease category.
-- `topic`: Specific topic, which is heart disease mortality.
-- `mortality_rate`: Heart disease mortality rate. Missing or suppressed values are listed as blank in the CSV.
-- `unit`: Unit for the mortality rate.
+- `topic`: Heart disease mortality.
+- `mortality_rate`: Heart disease mortality rate.
+- `unit`: Unit of the mortality rate.
 - `value_type`: Type of rate, such as age-adjusted or smoothed.
-- `footnote`: Notes about missing or insufficient data when included.
-- `sex`: Sex group for the row.
-- `race_ethnicity`: Race/ethnicity group for the row.
+- `footnote`: Notes about missing data when included.
+- `sex`: Sex group.
+- `race_ethnicity`: Race/ethnicity group.
 - `location_id`: Location identifier.
 - `latitude`: Latitude for the location.
 - `longitude`: Longitude for the location.
-- `high_risk_flag`: `True` for county rows above the 75th percentile of county mortality rates, otherwise `False`.
+- `high_risk_flag`: `True` for county rows above the 75th percentile of county mortality rates.
 
 Ways to filter the file:
 
 - Filter `state_abbr` to focus on one state.
 - Filter `geographic_level` to `County` to focus on local county planning.
 - Filter `sex` to compare male, female, or overall rows if available.
-- Filter `race_ethnicity` to look at specific population groups.
+- Filter `race_ethnicity` to look at specific ethnicity groups.
 - Filter `high_risk_flag` to `True` to find county rows with higher mortality rates.
 
-Users should keep the limitations in mind. Missing or suppressed values may hide patterns for small counties or smaller demographic groups. Death certificate reporting can contain errors or differences in coding. County rates can be unstable when populations are small. Also, the 2019 to 2021 period overlaps with COVID-era disruptions, so these rates should be interpreted with that context.
+Users should keep the limitations in mind. Missing values may hide patterns for small counties or smaller demographic groups. Also, the 2019 to 2021 period overlaps with COVID-era disruptions, so these rates should be interpreted with that context.
