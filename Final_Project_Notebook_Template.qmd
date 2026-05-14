@@ -10,21 +10,21 @@ execute:
 
 # Executive Summary
 
-This project is for local public health officials and community health planners. The purpose is to help identify counties and states with higher heart disease mortality rates so prevention resources, health education, screenings, and community support can be targeted more carefully.
+This project is for local public health officials and community health planners. The main purpose is to help identify counties and states with higher heart disease mortality rates so prevention resources, health education, screenings, and community support can be brought to light.
 
-The data comes from the CDC through Data.gov. It covers heart disease mortality among U.S. adults age 35 and older by state, territory, and county for 2019 to 2021. The original records are based on death certificates and CDC mortality records, and the data is reported as aggregated mortality rates instead of individual patient records.
+The data is from the CDC through Data.gov. It covers heart disease mortality among U.S. adults age 35 and older by state, territory, and county for 2019 to 2021. The original data is based on death certificates and CDC mortality records, and the data is reported as aggregated mortality rates instead of individual patient records.
 
-In this notebook, we extract the CSV file, clean the columns, convert rate and location fields into useful numeric formats, create county-level and state-level subsets, flag higher-risk counties, and export a cleaned CSV for public health use. We also use descriptive statistics and charts to compare mortality rates by geography, sex, and race/ethnicity.
+To begin our analysis, we extracted the CSV file, cleaned the columns, converted rate and location fields into useful numeric formats, created county-level and state-level subsets, flagged higher-risk counties, and exported a cleaned CSV for public health use. We also used descriptive statistics and charts to compare mortality rates by geography, sex, and race/ethnicity.
 
-Heart disease mortality matters because heart disease is a major cause of death in the United States. Local health departments often have limited time and money, so seeing where mortality rates are higher can help them decide where to focus outreach and prevention work.
+Heart disease mortality matters because heart disease is a major cause of death in the United States; it has impacted my personal life (Andrew Zhang) heavily. Local health departments often have limited time and money, so seeing where mortality rates are higher can help them decide where to focus outreach and prevention work.
 
 One interesting part of this project is that the dataset is already summarized by several groups, such as sex and race/ethnicity. That makes it useful for equity questions, but it also creates challenges. Some values are missing or suppressed because of insufficient data, and smaller counties may have less stable rates.
 
 ## Audience and Purpose
 
-The main audience is local public health officials, county health departments, and community health planners. These users might want to know which areas have higher heart disease mortality rates and whether certain population groups appear more affected.
+The main audience for this analysis is local public health officials and county health departments. These users might want to know which areas have higher heart disease mortality rates and whether certain population groups appear more affected.
 
-The purpose of the project is to turn a large public dataset into a cleaner and easier-to-use file, plus a simple analysis that points out patterns and limitations. The final product is not meant to prove why one county has a higher rate than another. It is meant to support planning questions and help users decide where more investigation or prevention work may be needed.
+The purpose of the project is to turn a large public dataset into a cleaner file, and then perform a simple analysis. The final product is not meant to prove why one county has a higher rate than another; rather, it is meant to support planning questions and help users decide where more investigation or prevention work may be needed.
 
 ## Division of Responsibility
 
@@ -41,7 +41,7 @@ Andrew is responsible for:
 Keshav is responsible for:
 
 - Executive summary
-- Well-formulated audience and purpose
+- Audience and purpose
 - Achieved purpose discussion
 - Descriptive EDA statistics
 - Descriptive EDA visualizations
