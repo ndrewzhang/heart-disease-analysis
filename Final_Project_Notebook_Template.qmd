@@ -1,11 +1,8 @@
 ---
 title: "Heart Disease Mortality Analysis Across U.S. Counties and States"
-author: "Andrew and Keshav"
+author: "Andrew Zhang, Keshav Ganapathy Raman"
 subtitle: "Final project for INST447, Spring 2026"
-format: html
-execute:
-  warning: false
-  message: false
+format: qmd
 ---
 
 # Executive Summary
@@ -20,7 +17,7 @@ Heart disease mortality matters because heart disease is a major cause of death 
 
 One interesting part of this project is that the dataset is already summarized by several groups, such as sex and race/ethnicity. That makes it useful for equity questions, but it also creates challenges. Some values are missing or suppressed because of insufficient data, and smaller counties may have less stable rates.
 
-## Audience and Purpose
+## Audience
 
 The main audience for this analysis is local public health officials and county health departments. These users might want to know which areas have higher heart disease mortality rates and whether certain population groups appear more affected.
 
@@ -56,9 +53,9 @@ Our extra mile has two parts. First, we created a cleaned final CSV that is easi
 
 Second, we spent extra time looking at bias and limitations. We examined missing values, suppressed values, small county issues, race/ethnicity groups, sex groups, and possible problems connected to death certificate reporting. This matters because public health data can look very exact, but the numbers still depend on how deaths were grouped and recorded.
 
-# Source(s) & Extraction
+## Source and Extraction
 
-The dataset was located as a public CSV file from CDC/Data.gov. It is titled "Heart Disease Mortality Data Among US Adults (35+) by State/Territory and County, 2019-2021." The data is connected to CDC mortality records and the National Vital Statistics System. The original information comes from death certificates, where cause of death is recorded and coded using standardized medical coding.
+The dataset was located as a public CSV file from data.gov. It is titled "Heart Disease Mortality Data Among US Adults (35+) by State/Territory and County, 2019-2021." The data is connected to CDC mortality records and the National Vital Statistics System. The original information comes from death certificates, where cause of death is recorded and coded using standardized medical coding.
 
 The records are aggregated, which means each row is not one person. Instead, rows describe heart disease mortality rates for places such as counties, states, territories, and the national level. The file also includes stratification fields, such as sex and race/ethnicity, so the rates can be compared across groups.
 
@@ -117,7 +114,7 @@ Shows the data type and non-null count for each column, which helps identify col
 - `Y_lat`: Latitude.
 - `X_lon`: Longitude.
 
-# Transformation Processes
+## Transformation Processes
 
 The transformation process made the dataset easier to analyze and easier for public health users to filter. We started by converting column names to lowercase and replacing spaces with underscores. Then, we converted mortality rates and coordinates into numeric values. Missing or suppressed mortality values are kept as `NaN` because replacing them with zero would be misleading.
 
@@ -514,7 +511,7 @@ Small counties are another concern. A small number of deaths can create a high r
 
 Finally, because this dataset includes 2019 to 2021, the context of COVID matters. People may have delayed care and mortality patterns changed heavily during the pandemic.
 
-# Data Product & Guide
+## Data Product & Guide
 
 The final data product is a cleaned CSV file called `cleaned_heart_disease_mortality_2019_2021.csv`. It is designed to be easier for public health officials to use than the original CDC file. It keeps the most relevant columns, uses clearer column names, and adds a `high_risk_flag` for county rows with mortality rates above the 75th percentile.
 
